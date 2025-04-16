@@ -1,11 +1,16 @@
+import os
 import requests
-from bs4 import BeautifulSoup
-
-from google.oauth2.service_account import Credentials
-import gspread
-
 import time
 
+from bs4 import BeautifulSoup
+from google.oauth2.service_account import Credentials
+import gspread
+from dotenv import load_dotenv
+
+load_dotenv('.env')
+
+AUTH_JSON_URL = os.getenv('AUTH_JSON_URL')
+SPREADSHEET_URL = os.getenv('SPREADSHEET_URL')
 
 class Scraping(object):
     def __init__(self, url:str) -> None:
@@ -76,7 +81,7 @@ class WriteGspread():
         'https://www.googleapis.com/auth/drive'
         ]
         credentials = Credentials.from_service_account_file(
-            "/Users/yuya/Desktop/MyWork/scraping/gspread-442710-2a4434cd337c.json",
+            AUTH_JSON_URL,
             scopes=scopes
         )
         gc = gspread.authorize(credentials)
@@ -94,7 +99,7 @@ class WriteGspread():
             self._write_value(cell, v)
         
 if __name__ == "__main__":
-    spreadsheet_URL = "https://docs.google.com/spreadsheets/d/1IENxGyRWt3RD517U0hBwRlKPudVlftXE6-oBLxQQ8yk/edit?gid=0#gid=0"
+    spreadsheet_URL = SPREADSHEET_URL
     WG = WriteGspread(spreadsheet_URL)
 
     for i in range(20, 50):
